@@ -60,6 +60,12 @@ async function startServer() {
   await ensureConfig();
   await connectDB();
 
+  const basePathRaw = process.env.BASE_PATH || '';
+  const basePath =
+    basePathRaw && basePathRaw !== '/'
+      ? `/${basePathRaw.replace(/^\/+|\/+$/g, '')}`
+      : '';
+
   // View engine setup
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, 'views'));
@@ -73,12 +79,16 @@ async function startServer() {
   if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', 1);
     app.use((req, res, next) => {
-      // When nginx reverse proxy is used, X-Forwarded-Proto header indicates original protocol
-      if (req.header('x-forwarded-proto') !== 'https') {
-        res.redirect(`https://${req.header('host')}${req.url}`);
-      } else {
-        next();
-      }
+      // When nginx reverse proxy is used, `req.secure` reflects the original protocol
+      // once `trust proxy` is enabled. Avoid redirect loops when headers are missing
+      // or contain multiple values (e.g. "https,http").
+      if (req.secure) return next();
+      if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+
+      const host = req.header('host');
+      if (!host) return next();
+
+      return res.redirect(301, `https://${host}${req.originalUrl}`);
     });
   }
   
@@ -86,7 +96,8 @@ async function startServer() {
   app.use(express.json()); // Parse JSON
 
   // Static files - serve BEFORE session middleware
-  app.use(express.static(path.join(__dirname, 'public')));
+  // Supports optional reverse-proxy subpath deployments via BASE_PATH.
+  app.use(basePath || '/', express.static(path.join(__dirname, 'public')));
 
   // Session configuration
   app.use(
@@ -114,6 +125,7 @@ async function startServer() {
 
   // Middleware to pass user data and query-based messages to views
   app.use((req, res, next) => {
+    res.locals.basePath = basePath;
     if (req.session && req.session.user) {
       res.locals.user = req.session.user;
     }
