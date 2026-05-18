@@ -98,7 +98,7 @@ pipeline {
                 sh '''
                     APP_DIR="/home/ubuntu/LoginPortal"
                     # Install production dependencies as ubuntu user
-                    sudo -u ubuntu bash -c "cd ${APP_DIR} && npm ci --only=production && (command -v pm2 >/dev/null 2>&1 || npm install -g pm2) && pm2 stop login-portal 2>/dev/null || true && pm2 delete login-portal 2>/dev/null || true && sleep 1 && pm2 start server.js --name login-portal --env production --max-memory-restart 300M && pm2 save"
+                    sudo -u ubuntu bash -c "cd ${APP_DIR} && npm ci --only=production && (command -v pm2 >/dev/null 2>&1 || npm install -g pm2) && if pm2 describe login-portal >/dev/null 2>&1; then pm2 reload login-portal --update-env; else pm2 start server.js --name login-portal --env production --max-memory-restart 300M; fi && pm2 save"
 
                     # Setup PM2 startup (runs once)
                     sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu 2>/dev/null || true
