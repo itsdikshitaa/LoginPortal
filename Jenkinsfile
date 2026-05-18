@@ -70,9 +70,9 @@ pipeline {
                     # Create backup of current app (excluding node_modules)
                     if [ -f "${APP_DIR}/server.js" ]; then
                         echo "Creating backup..."
-                        mkdir -p "${BACKUP_DIR}"
                         BACKUP="${BACKUP_DIR}/backup-$(date +%Y%m%d-%H%M%S)"
-                        sudo cp -r "${APP_DIR}/.env" "${APP_DIR}/server.js" "${BACKUP}/" 2>/dev/null || true
+                        sudo mkdir -p "${BACKUP}"
+                        sudo cp "${APP_DIR}/.env" "${BACKUP}/" 2>/dev/null || true
                         echo "✓ Backup saved"
                     fi
 
