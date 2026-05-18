@@ -1,0 +1,236 @@
+<!-- Dashboard Page (Protected) -->
+<div class="container">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+            <p class="subtitle">Welcome to your personal dashboard</p>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="profile-card">
+                <div class="profile-icon">👤</div>
+                <h2>Your Profile</h2>
+                
+                <div class="profile-info">
+                    <div class="info-row">
+                        <label>Username:</label>
+                        <span><%= user.username %></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Email:</label>
+                        <span><%= user.email %></span>
+                    </div>
+                    <div class="info-row">
+                        <label>Member Since:</label>
+                        <span id="memberSince">Loading...</span>
+                    </div>
+                </div>
+
+                <a href="/auth/logout" class="btn btn-danger">Logout</a>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">🔒</div>
+                    <div class="stat-content">
+                        <h3>Secure Account</h3>
+                        <p>Your password is encrypted with bcrypt</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⚙️</div>
+                    <div class="stat-content">
+                        <h3>Active Session</h3>
+                        <p>Your session is secure and managed</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-content">
+                        <h3>Cloud Stored</h3>
+                        <p>Data stored in MongoDB Atlas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-info">
+                <h2>About This Application</h2>
+                <p>This is a production-ready login portal built with:</p>
+                <ul>
+                    <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript, EJS templating</li>
+                    <li><strong>Backend:</strong> Node.js with Express.js framework</li>
+                    <li><strong>Database:</strong> MongoDB Atlas for cloud storage</li>
+                    <li><strong>Security:</strong> bcrypt password hashing, secure sessions</li>
+                    <li><strong>DevOps:</strong> GitHub, Jenkins CI/CD, AWS EC2 deployment</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-header .subtitle {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .dashboard-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .profile-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        grid-column: 1 / 2;
+    }
+
+    .profile-icon {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-card h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .profile-info {
+        margin-bottom: 20px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .info-row label {
+        font-weight: bold;
+        color: #666;
+    }
+
+    .info-row span {
+        color: #333;
+    }
+
+    .dashboard-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        grid-column: 2 / 3;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        min-width: 50px;
+        text-align: center;
+    }
+
+    .stat-content h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1rem;
+    }
+
+    .stat-content p {
+        margin: 5px 0 0 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-info {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        grid-column: 1 / -1;
+    }
+
+    .dashboard-info h2 {
+        color: #333;
+        margin-top: 0;
+    }
+
+    .dashboard-info ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .dashboard-info li {
+        padding: 10px 0;
+        color: #555;
+        border-bottom: 1px solid #eee;
+    }
+
+    .dashboard-info li:last-child {
+        border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-content {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-card {
+            grid-column: 1;
+        }
+
+        .dashboard-stats {
+            grid-column: 1;
+        }
+
+        .dashboard-info {
+            grid-column: 1;
+        }
+    }
+</style>
+
+<script>
+    // Display member since date
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const date = today.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        document.getElementById('memberSince').textContent = date;
+    });
+</script>

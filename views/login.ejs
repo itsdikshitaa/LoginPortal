@@ -1,0 +1,81 @@
+<!-- Login Page -->
+<div class="container">
+    <div class="form-container">
+        <div class="form-wrapper">
+            <h1>Welcome Back</h1>
+            <p class="form-subtitle">Login to your account</p>
+            
+            <form method="POST" action="/auth/login" class="form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                        minlength="6"
+                    >
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember" id="remember">
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+
+            <div class="form-footer">
+                <p>Don't have an account? <a href="/signup">Create one here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+    }
+
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .remember-me input {
+        margin-right: 5px;
+    }
+
+    .forgot-password {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .forgot-password:hover {
+        text-decoration: underline;
+    }
+</style>

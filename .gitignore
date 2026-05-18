@@ -1,0 +1,173 @@
+# 🔒 ENVIRONMENT & SECRETS
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+.env.example.local
+*.pem
+*.key
+*.pub
+
+# 📦 DEPENDENCIES
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.npm
+*.yarn
+.yarn/cache
+.yarn/unplugged
+
+# 🔨 BUILD & DIST
+dist/
+build/
+out/
+.next/
+.nuxt/
+coverage/
+*.tsbuildinfo
+
+# 🗂️ IDE & EDITOR
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.DS_Store
+Thumbs.db
+.sublime-project
+.sublime-workspace
+*.sublime-workspace
+.vim
+.emacs
+*.code-workspace
+
+# 💾 DATABASE
+*.sqlite
+*.sqlite3
+*.db
+*.mongorc.js
+dump/
+*.backup
+
+# 🔐 SECURITY & SENSITIVE DATA
+.env.*.private
+secrets/
+private/
+credentials/
+*.key
+*.pem
+*.pfx
+config/credentials.json
+aws_credentials
+google_credentials
+api_keys.json
+
+# 📱 OS FILES
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+desktop.ini
+Thumbs.db
+.gitkeep
+
+# 🧪 TESTING
+coverage/
+.nyc_output/
+test/coverage/
+*.lcov
+
+# 🖥️ DEVELOPMENT
+.nvmrc
+.tern-port
+.venv
+venv/
+ENV/
+env/
+
+# 📝 LOGS
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pm2-error.log
+
+# 📦 PACKAGE MANAGER LOCK FILES (Optional - uncomment to commit locks)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# 🔧 MISC
+.cache/
+.parcel-cache
+.eslintcache
+.next
+out/
+*.tgz
+dist-ssr/
+*.local
+.turbo/
+.nuxt/
+
+# 🚀 DEPLOYMENT TEMPORARY FILES
+*.zip
+*.tar.gz
+deploy.log
+rollback.log
+
+# 📊 ANALYTICS & MONITORING
+google-analytics.json
+sentry.json
+newrelic.json
+
+# 🗃️ BACKUPS & ARCHIVES
+*.backup
+*.tar
+*.gz
+backup/
+archive/
+
+# 🔒 SESSION & CACHE FILES
+sessions/
+cache/
+*.session
+.sessions/
+
+# 📧 MAIL LOGS
+mail_logs/
+*.eml
+
+# 🎯 PROJECT SPECIFIC
+public/uploads/
+uploads/
+temp/
+tmp/
+.tmp/
+.cache/
+
+# � NON-PROFESSIONAL DOCS (ignore local planning files)
+AWS-EC2-SETUP.md
+DELIVERY-SUMMARY.md
+FILE-MANIFEST.md
+GITHUB-JENKINS-SETUP.md
+INDEX.md
+PROJECT-COMPLETION-SUMMARY.md
+QUICK-START.md
+SECURITY-CHECKLIST.md
+SECURITY-GITIGNORE.md
+
+# �🐛 DEBUGGER FILES
+.vscode-test/
+.debugger/
+debug.log

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Login Portal' %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">🔐 LoginPortal</a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Home</a>
+                </li>
+                <% if(typeof user !== 'undefined') { %>
+                    <li class="nav-item">
+                        <a href="/dashboard" class="nav-link">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/auth/logout" class="nav-link logout-btn">Logout</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a href="/login" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/signup" class="nav-link signup-btn">Sign Up</a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="messages-container">
+        <% if(typeof messages !== 'undefined' && messages.error) { %>
+            <% messages.error.forEach(error => { %>
+                <div class="alert alert-error">
+                    <span>✗ <%= error %></span>
+                    <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            <% }); %>
+        <% } %>
+
+        <% if(typeof messages !== 'undefined' && messages.success) { %>
+            <% messages.success.forEach(success => { %>
+                <div class="alert alert-success">
+                    <span>✓ <%= success %></span>
+                    <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+
+    <!-- Page Content -->
+    <main class="main-content">
+        <%- body %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Login Portal Application. All rights reserved.</p>
+            <p>Built with Node.js, Express, and MongoDB</p>
+        </div>
+    </footer>
+
+    <script src="/js/validation.js"></script>
+</body>
+</html>

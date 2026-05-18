@@ -1,0 +1,64 @@
+<!-- Home Page -->
+<div class="container">
+    <div class="hero-section">
+        <h1>Welcome to Login Portal</h1>
+        <p>A modern, secure authentication system built with Node.js and MongoDB</p>
+        
+        <% if(typeof user !== 'undefined') { %>
+            <div class="hero-content logged-in">
+                <h2>Hello, <%= user.username %>!</h2>
+                <p>You are successfully logged in.</p>
+                <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        <% } else { %>
+            <div class="hero-buttons">
+                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/signup" class="btn btn-secondary">Sign Up</a>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="features-section">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure Authentication</h3>
+                <p>Password hashing with bcrypt and secure session management</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3>MongoDB Storage</h3>
+                <p>Cloud-based NoSQL database for reliable data storage</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast Performance</h3>
+                <p>Built on Express.js with optimized request handling</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Responsive Design</h3>
+                <p>Works seamlessly on desktop, tablet, and mobile devices</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tech-stack-section">
+        <h2>Technology Stack</h2>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <strong>Frontend:</strong> HTML, CSS, JavaScript, EJS
+            </div>
+            <div class="tech-item">
+                <strong>Backend:</strong> Node.js, Express.js
+            </div>
+            <div class="tech-item">
+                <strong>Database:</strong> MongoDB Atlas
+            </div>
+            <div class="tech-item">
+                <strong>DevOps:</strong> GitHub, Jenkins, AWS EC2
+            </div>
+        </div>
+    </div>
+</div>

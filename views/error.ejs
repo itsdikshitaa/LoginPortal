@@ -1,0 +1,41 @@
+<!-- Error Page -->
+<div class="container">
+    <div class="error-container">
+        <div class="error-content">
+            <h1 class="error-code">⚠️</h1>
+            <h2 class="error-title">An Error Occurred</h2>
+            <p class="error-message"><%= typeof message !== 'undefined' ? message : 'An unexpected error occurred' %></p>
+            <a href="/" class="btn btn-primary">Go Back Home</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    }
+
+    .error-content {
+        text-align: center;
+        color: white;
+    }
+
+    .error-code {
+        font-size: 5rem;
+        margin: 0;
+    }
+
+    .error-title {
+        font-size: 2rem;
+        margin: 10px 0 20px 0;
+    }
+
+    .error-message {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+</style>
