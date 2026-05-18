@@ -362,6 +362,15 @@ http://your-ec2-public-ip:5000
 
 ## 🐛 Troubleshooting
 
+### SSL/HTTPS Error: ERR_SSL_PROTOCOL_ERROR
+
+**Problem**: Getting `ERR_SSL_PROTOCOL_ERROR` when accessing via HTTPS
+
+**Solution**:
+- See detailed guide: [SSL-TROUBLESHOOTING.md](SSL-TROUBLESHOOTING.md)
+- For development: Access via `http://your-ec2-ip:5000` (not HTTPS)
+- For production: Set up nginx with Let's Encrypt (see [NGINX-SSL-SETUP.md](NGINX-SSL-SETUP.md))
+
 ### Application won't start
 
 ```bash
@@ -411,6 +420,13 @@ pm2 restart login-portal
 pm2 kill
 pm2 start server.js --name "login-portal"
 ```
+
+## 📚 Documentation
+
+- [AWS EC2 Deployment Guide](AWS-EC2-SETUP.md)
+- [Nginx + Let's Encrypt SSL Setup](NGINX-SSL-SETUP.md)
+- [SSL/HTTPS Troubleshooting](SSL-TROUBLESHOOTING.md)
+- [Security Checklist](SECURITY-CHECKLIST.md)
 
 ## 📚 Learning Resources
 

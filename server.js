@@ -9,6 +9,9 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import readline from 'readline/promises';
 import { stdin, stdout } from 'node:process';
+import https from 'https';
+import http from 'http';
+import fs from 'fs';
 
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
@@ -65,10 +68,24 @@ async function startServer() {
 
   // Middleware stack
   app.use(helmet()); // Security headers
+  
+  // Trust proxy and redirect HTTP to HTTPS in production
+  if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+    app.use((req, res, next) => {
+      // When nginx reverse proxy is used, X-Forwarded-Proto header indicates original protocol
+      if (req.header('x-forwarded-proto') !== 'https') {
+        res.redirect(`https://${req.header('host')}${req.url}`);
+      } else {
+        next();
+      }
+    });
+  }
+  
   app.use(express.urlencoded({ extended: false })); // Parse form data
   app.use(express.json()); // Parse JSON
 
-  // Static files
+  // Static files - serve BEFORE session middleware
   app.use(express.static(path.join(__dirname, 'public')));
 
   // Session configuration
@@ -84,9 +101,11 @@ async function startServer() {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24, // 24 hours
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+        secure: process.env.NODE_ENV === 'production' || process.env.TRUST_PROXY === 'true',
+        sameSite: 'strict', // CSRF protection
       },
       name: 'sessionId',
+      proxy: process.env.TRUST_PROXY === 'true' || process.env.NODE_ENV === 'production', // Trust nginx reverse proxy
     })
   );
 
@@ -146,12 +165,37 @@ async function startServer() {
 
   const PORT = process.env.PORT || 5000;
   const HOST = process.env.HOST || '0.0.0.0';
-  app.listen(PORT, HOST, () => {
-    console.log(`✓ Server is running on http://${HOST}:${PORT}`);
-    if (HOST === '0.0.0.0') {
-      console.log(`  Access via your AWS public IP or DNS on port ${PORT}`);
-    }
-  });
+  const NODE_ENV = process.env.NODE_ENV || 'development';
+  
+  // Check if SSL certificates exist for HTTPS
+  const certPath = process.env.SSL_CERT_PATH || '/etc/ssl/certs/cert.pem';
+  const keyPath = process.env.SSL_KEY_PATH || '/etc/ssl/private/key.pem';
+  const hasSSL = fs.existsSync(certPath) && fs.existsSync(keyPath);
+
+  if (hasSSL && NODE_ENV === 'production') {
+    // HTTPS Server with SSL certificates
+    const options = {
+      cert: fs.readFileSync(certPath),
+      key: fs.readFileSync(keyPath),
+    };
+    https.createServer(options, app).listen(PORT, HOST, () => {
+      console.log(`✓ Secure Server is running on https://${HOST}:${PORT}`);
+      if (HOST === '0.0.0.0') {
+        console.log(`  Access via your AWS public IP or DNS on port ${PORT} (HTTPS)`);
+      }
+    });
+  } else {
+    // HTTP Server (for development or when SSL not available)
+    app.listen(PORT, HOST, () => {
+      console.log(`✓ Server is running on http://${HOST}:${PORT}`);
+      if (HOST === '0.0.0.0') {
+        console.log(`  Access via your AWS public IP or DNS on port ${PORT}`);
+      }
+      if (!hasSSL && NODE_ENV === 'production') {
+        console.warn('⚠️  SSL certificates not found. For production HTTPS, configure nginx as reverse proxy or provide SSL certificates.');
+      }
+    });
+  }
 }
 
 startServer().catch((error) => {

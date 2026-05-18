@@ -171,3 +171,4 @@ SECURITY-GITIGNORE.md
 .vscode-test/
 .debugger/
 debug.log
+NGINX-SSL-SETUP.md
