@@ -68,7 +68,7 @@ pipeline {
                     sudo chown ubuntu:ubuntu "${APP_DIR}"
 
                     # Create backup of current app (excluding node_modules)
-                    if [ -d "${APP_DIR}/server.js" ]; then
+                    if [ -f "${APP_DIR}/server.js" ]; then
                         echo "Creating backup..."
                         mkdir -p "${BACKUP_DIR}"
                         BACKUP="${BACKUP_DIR}/backup-$(date +%Y%m%d-%H%M%S)"
@@ -96,35 +96,16 @@ pipeline {
         stage('6. Install & Restart App') {
             steps {
                 sh '''
+                    APP_DIR="/home/ubuntu/LoginPortal"
                     # Install production dependencies as ubuntu user
-                    sudo -u ubuntu bash -c '
-                        cd "${APP_DIR}"
-                        echo "Installing production dependencies..."
-                        npm ci --only=production
-
-                        # Ensure PM2 is available
-                        command -v pm2 >/dev/null 2>&1 || { echo "Installing PM2..."; npm install -g pm2; }
-
-                        # Stop current app
-                        echo "Stopping current application..."
-                        pm2 stop login-portal 2>/dev/null || true
-                        pm2 delete login-portal 2>/dev/null || true
-                        sleep 2
-
-                        # Start with PM2
-                        echo "Starting application with PM2..."
-                        pm2 start server.js --name "login-portal" --env production --max-memory-restart 300M
-
-                        # Save PM2 config
-                        pm2 save
-                    '
+                    sudo -u ubuntu bash -c "cd ${APP_DIR} && npm ci --only=production && (command -v pm2 >/dev/null 2>&1 || npm install -g pm2) && pm2 stop login-portal 2>/dev/null || true && pm2 delete login-portal 2>/dev/null || true && sleep 1 && pm2 start server.js --name login-portal --env production --max-memory-restart 300M && pm2 save"
 
                     # Setup PM2 startup (runs once)
                     sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu 2>/dev/null || true
 
                     echo ""
                     echo "✓ Application deployed successfully!"
-                    echo "✓ Port: ${APP_PORT}"
+                    echo "✓ Port: 5000"
                     sudo -u ubuntu pm2 list 2>/dev/null || echo "(run 'pm2 list' as ubuntu)"
                 '''
             }
