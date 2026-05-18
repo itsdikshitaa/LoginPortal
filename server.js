@@ -73,7 +73,21 @@ async function startServer() {
   app.set('layout', 'layout');
 
   // Middleware stack
-  app.use(helmet()); // Security headers
+  // Security headers
+  // IMPORTANT: This app is currently served over plain HTTP (port 80 via nginx).
+  // Helmet's default CSP includes `upgrade-insecure-requests`, which forces browsers
+  // to rewrite http:// asset URLs to https:// and breaks CSS/JS when public 443 isn't open.
+  // So we keep CSP defaults but disable that directive.
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+          'upgrade-insecure-requests': null,
+        },
+      },
+    })
+  );
   
   // Trust proxy and redirect HTTP to HTTPS in production
   if (process.env.NODE_ENV === 'production') {
