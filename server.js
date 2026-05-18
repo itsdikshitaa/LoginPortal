@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import flash from 'express-flash';
+import expressLayouts from 'express-ejs-layouts';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import readline from 'readline/promises';
@@ -59,6 +60,8 @@ async function startServer() {
   // View engine setup
   app.set('view engine', 'ejs');
   app.set('views', path.join(__dirname, 'views'));
+  app.use(expressLayouts);
+  app.set('layout', 'layout');
 
   // Middleware stack
   app.use(helmet()); // Security headers
@@ -90,12 +93,16 @@ async function startServer() {
   // Flash messages middleware
   app.use(flash());
 
-  // Middleware to pass user data to views
+  // Middleware to pass user data and query-based messages to views
   app.use((req, res, next) => {
     if (req.session && req.session.user) {
       res.locals.user = req.session.user;
     }
     res.locals.messages = req.flash();
+    if (req.query.logout === '1') {
+      res.locals.messages.success = res.locals.messages.success || [];
+      res.locals.messages.success.push('You have logged out successfully');
+    }
     next();
   });
 
@@ -103,7 +110,7 @@ async function startServer() {
 
   // Home page route
   app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { title: 'Home' });
   });
 
   // Authentication routes
@@ -116,12 +123,12 @@ async function startServer() {
 
   // Login page shortcut
   app.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', { title: 'Login' });
   });
 
   // Signup page shortcut
   app.get('/signup', (req, res) => {
-    res.render('signup');
+    res.render('signup', { title: 'Sign Up' });
   });
 
   // 404 error handling

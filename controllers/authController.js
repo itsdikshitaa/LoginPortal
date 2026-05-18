@@ -2,7 +2,10 @@ import User from '../models/User.js';
 
 // Render signup page
 export const getSignup = (req, res) => {
-  res.render('signup');
+  if (req.session && req.session.userId) {
+    return res.redirect('/dashboard');
+  }
+  res.render('signup', { title: 'Sign Up' });
 };
 
 // Handle user signup
@@ -54,7 +57,10 @@ export const postSignup = async (req, res) => {
 
 // Render login page
 export const getLogin = (req, res) => {
-  res.render('login');
+  if (req.session && req.session.userId) {
+    return res.redirect('/dashboard');
+  }
+  res.render('login', { title: 'Login' });
 };
 
 // Handle user login
@@ -101,7 +107,7 @@ export const logout = (req, res) => {
       console.error('Session destroy error:', error);
       return res.redirect('/dashboard');
     }
-    req.flash('success', 'You have logged out successfully');
-    res.redirect('/');
+    res.clearCookie('sessionId');
+    res.redirect('/?logout=1');
   });
 };
