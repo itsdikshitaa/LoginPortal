@@ -71,12 +71,13 @@ const loadBuildVersion = () => {
 
   const commit = versionData.commit || getGitCommitHash() || null;
   const buildDate = versionData.buildDate || null;
+  const version = versionData.version || packageVersion;
 
   return {
-    version: packageVersion,
+    version,
     commit,
     buildDate,
-    full: commit ? `${packageVersion} (${commit})` : packageVersion,
+    full: commit ? `${version} (${commit})` : version,
   };
 };
 

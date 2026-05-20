@@ -41,14 +41,17 @@ pipeline {
                     COMMIT_HASH=$(git rev-parse --short HEAD)
                     BUILD_DATE=$(TZ='Asia/Kolkata' date +"%Y-%m-%dT%H:%M:%S IST")
                     PACKAGE_VERSION=$(node -p "require('./package.json').version")
+                    COMMIT_COUNT=$(git rev-list --count HEAD)
+                    BASE_VERSION="${PACKAGE_VERSION%.*}"
+                    BUILD_VERSION="${BASE_VERSION}.${COMMIT_COUNT}"
                     cat > version.json <<EOF
 {
-  "version": "${PACKAGE_VERSION}",
+  "version": "${BUILD_VERSION}",
   "commit": "${COMMIT_HASH}",
   "buildDate": "${BUILD_DATE}"
 }
 EOF
-                    echo "Generated version.json: ${PACKAGE_VERSION} (${COMMIT_HASH})"
+                    echo "Generated version.json: ${BUILD_VERSION} (${COMMIT_HASH})"
                 '''
             }
         }
