@@ -68,9 +68,73 @@
             </div>
         </div>
     </div>
+
+    <% if (showGif) { %>
+    <div id="gif-popup" class="gif-popup-overlay">
+        <div class="gif-popup-card">
+            <button id="closeGifPopup" class="gif-popup-close" aria-label="Close welcome GIF">&times;</button>
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjBxcmEwenZkbGhiZzlndWNxYjRkOG42YTVkOWZwd3h2ZHpodjZydSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/blSTtZehjAZ8I/giphy.gif" alt="Welcome GIF">
+        </div>
+    </div>
+    <script src="<%= (typeof basePath !== 'undefined' ? basePath : '') %>/js/gif-popup.js"></script>
+    <% } %>
 </div>
 
 <style>
+    #gif-popup {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        padding: 20px;
+    }
+
+    .gif-popup-card {
+        position: relative;
+        background: #000;
+        border-radius: 24px;
+        padding: 16px;
+        width: min(100%, 96vw);
+        max-width: 960px;
+        max-height: 96vh;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .gif-popup-card img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: calc(96vh - 48px);
+        border-radius: 18px;
+        object-fit: contain;
+    }
+
+    .gif-popup-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        font-size: 1.25rem;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .gif-popup-close:hover {
+        background: rgba(0, 0, 0, 0.75);
+    }
+
     .dashboard-container {
         max-width: 1000px;
         margin: 0 auto;

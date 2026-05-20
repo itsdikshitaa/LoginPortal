@@ -90,6 +90,7 @@ export const postLogin = async (req, res) => {
       username: user.username,
       email: user.email,
     };
+    req.session.showGif = true;
 
     req.flash('success', `Welcome back, ${user.username}!`);
     res.redirect('/dashboard');

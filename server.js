@@ -84,6 +84,7 @@ async function startServer() {
         useDefaults: true,
         directives: {
           'upgrade-insecure-requests': null,
+          'img-src': ["'self'", 'https://media1.giphy.com', 'https://media.giphy.com', 'https://i.giphy.com'],
         },
       },
     })
@@ -163,7 +164,12 @@ async function startServer() {
 
   // Dashboard route (protected)
   app.get('/dashboard', isAuthenticated, (req, res) => {
-    res.render('dashboard', { user: req.session.user });
+    const showGif = req.session.showGif;
+    delete req.session.showGif;
+    res.render('dashboard', {
+      user: req.session.user,
+      showGif,
+    });
   });
 
   // Login page shortcut
