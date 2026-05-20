@@ -41,7 +41,7 @@ pipeline {
                     COMMIT_HASH=$(git rev-parse --short HEAD)
                     BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
                     PACKAGE_VERSION=$(node -p "require('./package.json').version")
-                    cat > version.json <<'EOF'
+                    cat > version.json <<EOF
 {
   "version": "${PACKAGE_VERSION}",
   "commit": "${COMMIT_HASH}",
