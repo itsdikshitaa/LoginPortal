@@ -378,6 +378,12 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
+.footer-version {
+    margin-top: 8px;
+    color: #777;
+    font-size: 0.9rem;
+}
+
 .feature-icon {
     font-size: 3rem;
     margin-bottom: 15px;

@@ -64,7 +64,9 @@
     <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2024 Login Portal Application. All rights reserved.</p>
-            
+            <% if (typeof appVersion !== 'undefined') { %>
+            <p class="footer-version">Version: <%= appVersion.full %><%= appVersion.buildDate ? ' • Built: ' + appVersion.buildDate : '' %></p>
+            <% } %>
         </div>
     </footer>
 

@@ -12,6 +12,7 @@ import { stdin, stdout } from 'node:process';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
+import { execSync } from 'child_process';
 
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
@@ -23,6 +24,49 @@ dotenv.config({ path: './.env' });
 const requiredEnvVars = ['MONGODB_URI', 'SESSION_SECRET'];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const getGitCommitHash = () => {
+  try {
+    if (fs.existsSync(path.join(__dirname, '.git'))) {
+      return execSync('git rev-parse --short HEAD', {
+        cwd: __dirname,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim();
+    }
+  } catch (error) {
+    return null;
+  }
+  return null;
+};
+
+const loadBuildVersion = () => {
+  const packageVersion = JSON.parse(
+    fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')
+  ).version;
+
+  let versionData = {};
+  const versionPath = path.join(__dirname, 'version.json');
+  if (fs.existsSync(versionPath)) {
+    try {
+      versionData = JSON.parse(fs.readFileSync(versionPath, 'utf8')) || {};
+    } catch (error) {
+      versionData = {};
+    }
+  }
+
+  const commit = versionData.commit || getGitCommitHash() || 'unknown';
+  const buildDate = versionData.buildDate || null;
+
+  return {
+    version: packageVersion,
+    commit,
+    buildDate,
+    full: `${packageVersion} (${commit})`,
+  };
+};
+
+const appVersion = loadBuildVersion();
 
 // Initialize Express app
 const app = express();
@@ -138,9 +182,10 @@ async function startServer() {
   // Flash messages middleware
   app.use(flash());
 
-  // Middleware to pass user data and query-based messages to views
+  // Middleware to pass version, user data, and query-based messages to views
   app.use((req, res, next) => {
     res.locals.basePath = basePath;
+    res.locals.appVersion = appVersion;
     if (req.session && req.session.user) {
       res.locals.user = req.session.user;
     }
@@ -166,10 +211,28 @@ async function startServer() {
   app.get('/dashboard', isAuthenticated, (req, res) => {
     const showGif = req.session.showGif;
     delete req.session.showGif;
+
+    const memberSince = req.session.user?.createdAt
+      ? new Date(req.session.user.createdAt).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })
+      : new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+
     res.render('dashboard', {
       user: req.session.user,
       showGif,
+      memberSince,
     });
+  });
+
+  app.get('/version', (req, res) => {
+    res.json(appVersion);
   });
 
   // Login page shortcut

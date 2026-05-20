@@ -44,6 +44,7 @@ export const postSignup = async (req, res) => {
       id: newUser._id,
       username: newUser.username,
       email: newUser.email,
+      createdAt: newUser.createdAt,
     };
 
     req.flash('success', 'User registered successfully!');
@@ -89,6 +90,7 @@ export const postLogin = async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
+      createdAt: user.createdAt,
     };
     req.session.showGif = true;
 

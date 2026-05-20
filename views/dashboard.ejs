@@ -22,7 +22,7 @@
                     </div>
                     <div class="info-row">
                         <label>Member Since:</label>
-                        <span id="memberSince">Loading...</span>
+                        <span><%= typeof memberSince !== 'undefined' ? memberSince : 'Unknown' %></span>
                     </div>
                 </div>
 
@@ -285,16 +285,3 @@
         }
     }
 </style>
-
-<script>
-    // Display member since date
-    document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date();
-        const date = today.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-        document.getElementById('memberSince').textContent = date;
-    });
-</script>

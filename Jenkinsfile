@@ -34,7 +34,26 @@ pipeline {
             }
         }
 
-        stage('3. Validate Configuration') {
+        stage('3. Create Build Version File') {
+            steps {
+                sh '''
+                    set -e
+                    COMMIT_HASH=$(git rev-parse --short HEAD)
+                    BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                    PACKAGE_VERSION=$(node -p "require('./package.json').version")
+                    cat > version.json <<'EOF'
+{
+  "version": "${PACKAGE_VERSION}",
+  "commit": "${COMMIT_HASH}",
+  "buildDate": "${BUILD_DATE}"
+}
+EOF
+                    echo "Generated version.json: ${PACKAGE_VERSION} (${COMMIT_HASH})"
+                '''
+            }
+        }
+
+        stage('4. Validate Configuration') {
             steps {
                 sh '''
                     test -f ".env.example" && echo "✓ .env.example found"
@@ -45,7 +64,7 @@ pipeline {
             }
         }
 
-        stage('4. Tests') {
+        stage('5. Tests') {
             steps {
                 sh '''
                     npm test || echo "No automated tests configured yet"
@@ -53,7 +72,7 @@ pipeline {
             }
         }
 
-        stage('5. Deploy to App Directory') {
+        stage('6. Deploy to App Directory') {
             steps {
                 script {
                     echo '========================================='
@@ -93,7 +112,7 @@ pipeline {
             }
         }
 
-        stage('6. Install & Restart App') {
+        stage('7. Install & Restart App') {
             steps {
                 sh '''
                     APP_DIR="/home/ubuntu/LoginPortal"
@@ -111,7 +130,7 @@ pipeline {
             }
         }
 
-        stage('7. Verify Deployment') {
+        stage('8. Verify Deployment') {
             steps {
                 sh '''
                     sleep 3

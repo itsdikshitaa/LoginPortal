@@ -30,6 +30,7 @@ out/
 .nuxt/
 coverage/
 *.tsbuildinfo
+version.json
 
 # 🗂️ IDE & EDITOR
 .vscode/
