@@ -40,6 +40,15 @@ const getGitCommitHash = () => {
   return null;
 };
 
+const getBuildVersionFromEnv = () => {
+  const commit = process.env.BUILD_COMMIT || process.env.GIT_COMMIT || null;
+  const buildDate = process.env.BUILD_DATE || process.env.BUILD_TIMESTAMP || null;
+  if (commit || buildDate) {
+    return { commit, buildDate };
+  }
+  return null;
+};
+
 const loadBuildVersion = () => {
   const packageVersion = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')
@@ -55,14 +64,19 @@ const loadBuildVersion = () => {
     }
   }
 
-  const commit = versionData.commit || getGitCommitHash() || 'unknown';
+  const envVersion = getBuildVersionFromEnv();
+  if (envVersion) {
+    versionData = { ...versionData, ...envVersion };
+  }
+
+  const commit = versionData.commit || getGitCommitHash() || null;
   const buildDate = versionData.buildDate || null;
 
   return {
     version: packageVersion,
     commit,
     buildDate,
-    full: `${packageVersion} (${commit})`,
+    full: commit ? `${packageVersion} (${commit})` : packageVersion,
   };
 };
 
